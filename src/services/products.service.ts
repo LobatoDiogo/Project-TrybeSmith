@@ -7,6 +7,12 @@ async function registerProduct(name: string, amount: string): Promise<Products> 
   return newProduct;
 }
 
+async function findAll(): Promise<Products[]> {
+  const products = await productsModel.findAll();
+  return products;
+}
+
 export default {
   registerProduct,
+  findAll,
 };
