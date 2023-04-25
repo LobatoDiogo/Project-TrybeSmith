@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import usersService from '../services/users.service';
 import generateToken from '../utils/auth';
 
@@ -12,6 +12,18 @@ async function createUser(req: Request, res: Response) {
   return res.status(201).json({ token });
 }
 
+async function login(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { username, password } = req.body;
+
+    const token = await usersService.login(username, password);
+    res.status(200).json({ token });
+  } catch (err) {
+    next(err);
+  }
+}
+
 export default {
   createUser,
+  login,
 };
