@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import auth from '../utils/auth';
+import { validaToken } from '../utils/auth';
 
 const validateToken = (req: Request, res: Response, next: NextFunction) => {
   const { authorization } = req.headers;
@@ -9,10 +9,12 @@ const validateToken = (req: Request, res: Response, next: NextFunction) => {
   }
 
   try {
-    const decoded = auth.validaToken(authorization);
+    const decoded = validaToken(authorization);
+
     res.locals.user = decoded;
-    next();
-  } catch (err) {
+
+    return next();
+  } catch (error) {
     return res.status(401).json({ message: 'Invalid token' });
   }
 };

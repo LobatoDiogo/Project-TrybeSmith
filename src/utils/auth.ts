@@ -11,7 +11,7 @@ const configJWT: SignOptions = {
 const generateToken = (payload: User) => {
   const { id, username, level, vocation } = payload;
 
-  const token = jwt.sign({ username, level, vocation, id }, secretKey, configJWT);
+  const token = jwt.sign({ username, vocation, level, id }, secretKey, configJWT);
 
   return token;
 };
@@ -22,4 +22,4 @@ const validaToken = (token: string) => {
   return decoded;
 };
 
-export = { generateToken, validaToken }; 
+export { generateToken, validaToken };
