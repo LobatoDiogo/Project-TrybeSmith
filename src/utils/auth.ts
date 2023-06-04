@@ -9,8 +9,17 @@ const configJWT: SignOptions = {
 };
 
 const generateToken = (payload: User) => {
-  const { password, ...payloadWithoutPassword } = payload;
-  return jwt.sign({ payload: payloadWithoutPassword }, secretKey, configJWT);
+  const { id, username, level, vocation } = payload;
+
+  const token = jwt.sign({ username, level, vocation, id }, secretKey, configJWT);
+
+  return token;
 };
 
-export default generateToken;
+const validaToken = (token: string) => {
+  const decoded = jwt.verify(token, secretKey, configJWT);
+
+  return decoded;
+};
+
+export = { generateToken, validaToken }; 

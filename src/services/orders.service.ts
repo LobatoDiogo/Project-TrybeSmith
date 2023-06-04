@@ -6,6 +6,16 @@ async function listOrders(): Promise<Order[]> {
   return orders;
 }
 
+async function createOrder(userId: number, productsIds: number[]): Promise<Order> {
+  const newOrder = await ordersModel.createOrder(userId);
+
+  await Promise.all(productsIds.map((productId) => 
+    ordersModel.updateProduct(newOrder.id as number, productId)));
+
+  return newOrder;
+}
+
 export default {
   listOrders,
+  createOrder,
 };

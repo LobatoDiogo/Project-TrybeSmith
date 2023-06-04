@@ -6,6 +6,16 @@ async function listOrders(req: Request, res: Response) {
   res.status(200).json(allOrders);
 }
 
+async function createOrder(req: Request, res: Response): Promise<void> {
+  const { productsIds } = req.body;
+  const { id } = res.locals.user;
+
+  const newOrder = await ordersService.createOrder(id, productsIds);
+
+  res.status(201).json({ userId: newOrder.userId, productsIds });
+}
+
 export default {
   listOrders,
+  createOrder,
 };

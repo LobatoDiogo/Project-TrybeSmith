@@ -1,6 +1,11 @@
-import { RowDataPacket } from 'mysql2';
+import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import { Order } from '../interfaces/Order';
 import connection from './connection';
+
+export interface IUpdatedProduct {
+  orderId: number;
+  productId: number;
+}
 
 async function listOrders(): Promise<Order[]> {
   const [rows] = await connection
@@ -13,6 +18,25 @@ async function listOrders(): Promise<Order[]> {
   return rows as Order[];
 }
 
+async function createOrder(userId: number): Promise<Order> {
+  const [row] = await connection
+    .execute<ResultSetHeader>(
+    'INSERT INTO Trybesmith.orders (user_id) VALUES (?)',
+    [userId],
+  );
+  return { id: row.insertId, userId };
+}
+
+async function updateProduct(orderId: number, productId: number): Promise<IUpdatedProduct> {
+  await connection.execute(
+    'UPDATE Trybesmith.products SET order_id = ? WHERE id = ?',
+    [orderId, productId],
+  );
+  return { orderId, productId };
+}
+
 export default {
   listOrders,
+  createOrder,
+  updateProduct,
 };
